@@ -615,20 +615,18 @@
 
 		// Flip card
 		flashcard.addEventListener('click', () => {
-			// Toggle the flipped class
 			flashcard.classList.toggle('flipped');
 			isFlipped = !isFlipped;
-
-			// Add animation effect to both faces for smoother transition
-			const frontTarget = '.card-face.front';
-			const backTarget = '.card-face.back';
-
+			
+			// Corrected: Animate the visible face
+			const targetFace = '.back';
+			scale = isFlipped ? [0.9, 1] : [1, 0];
 			anime({
-				targets: isFlipped ? frontTarget : backTarget,
-				scale: [0.9, 1],
-				duration: 300,
-				easing: 'easeOutQuad',
-				delay: 100
+			  targets: targetFace,
+			  scale: scale,
+			  duration: 300,
+			  easing: 'easeOutQuad',
+			  delay: 100
 			});
 		});
 
