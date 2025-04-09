@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Greek Alphabet Flashcards</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+	<style>
+		body {
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+			background-color: #f0f4f8;
+			margin: 0;
+			padding: 0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+			overflow-x: hidden;
+		}
+
+		.container {
+			width: 95%;
+			max-width: 1000px;
+			margin: 20px auto;
+			text-align: center;
+		}
+
+		h1 {
+			color: #2a4365;
+			margin-bottom: 30px;
+			font-size: 2.5rem;
+		}
+
+		.controls {
+			margin: 20px 0;
+			display: flex;
+			justify-content: center;
+			gap: 15px;
+			flex-wrap: wrap;
+		}
+
+		button {
+			background-color: #4299e1;
+			color: white;
+			border: none;
+			padding: 10px 20px;
+			border-radius: 5px;
+			cursor: pointer;
+			font-size: 1rem;
+			transition: background-color 0.3s, transform 0.2s;
+		}
+
+		button:hover {
+			background-color: #3182ce;
+			transform: translateY(-2px);
+		}
+
+		button:active {
+			transform: translateY(1px);
+		}
+
+		.button-primary {
+			background-color: #4299e1;
+		}
+
+		.button-secondary {
+			background-color: #718096;
+		}
+
+		#randomize {
+			background-color: #38b2ac;
+		}
+
+		#reset {
+			background-color: #ed8936;
+		}
+
+		.flashcard-container {
+			perspective: 1000px;
+			height: 400px;
+			margin: 30px auto;
+			width: 100%;
+			max-width: 600px;
+		}
+
+		.flashcard {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			transition: transform 0.8s;
+			transform-style: preserve-3d;
+			box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+			border-radius: 20px;
+			cursor: pointer;
+		}
+
+		.card-face {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			backface-visibility: hidden;
+			border-radius: 20px;
+			padding: 30px;
+			box-sizing: border-box;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		  }
+
+		.front {
+			background: linear-gradient(135deg, #4299e1, #2b6cb0);
+			color: white;
+		}
+
+		.back {
+			background: linear-gradient(135deg, #ebf4ff, #c3dafe);
+			color: #2a4365;
+			transform: rotateY(180deg);
+		}
+
+		.flipped {
+			transform: rotateY(180deg);
+		}
+
+		.greek-letter {
+			font-size: 7rem;
+			margin-bottom: 20px;
+			font-weight: bold;
+		}
+
+		.letter-name {
+			font-size: 2.5rem;
+			margin-bottom: 5px;
+		}
+
+		.small-letter {
+			font-size: 3rem;
+			margin: 10px 0;
+		}
+
+		.pronunciation {
+			font-style: italic;
+			margin-bottom: 20px;
+			font-size: 1.2rem;
+		}
+
+		.usage {
+			margin-bottom: 15px;
+			font-size: 1.1rem;
+		}
+
+		.example {
+			background-color: rgba(255, 255, 255, 0.2);
+			padding: 10px 15px;
+			border-radius: 10px;
+			font-size: 1.1rem;
+		}
+
+		.progress-container {
+			width: 100%;
+			height: 8px;
+			background-color: #e2e8f0;
+			border-radius: 4px;
+			margin: 20px auto;
+			max-width: 600px;
+		}
+
+		.progress-bar {
+			height: 100%;
+			background-color: #4299e1;
+			border-radius: 4px;
+			width: 0;
+			transition: width 0.3s ease;
+		}
+
+		.card-counter {
+			margin-top: 10px;
+			font-size: 1.1rem;
+			color: #4a5568;
+		}
+
+		.alphabet-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+			gap: 10px;
+			margin: 20px auto;
+			max-width: 600px;
+		}
+
+		.grid-letter {
+			background-color: #cbd5e0;
+			border-radius: 5px;
+			padding: 10px 5px;
+			cursor: pointer;
+			transition: background-color 0.3s, transform 0.2s;
+		}
+
+		.grid-letter:hover {
+			background-color: #a0aec0;
+			transform: translateY(-2px);
+		}
+
+		.grid-letter.active {
+			background-color: #4299e1;
+			color: white;
+		}
+
+		@media (max-width: 768px) {
+			.flashcard-container {
+				height: 350px;
+			}
+
+			.greek-letter {
+				font-size: 5rem;
+			}
+
+			.letter-name {
+				font-size: 2rem;
+			}
+		}
+
+		@media (max-width: 480px) {
+			.flashcard-container {
+				height: 300px;
+			}
+
+			.greek-letter {
+				font-size: 4rem;
+			}
+
+			.letter-name {
+				font-size: 1.8rem;
+			}
+
+			.alphabet-grid {
+				grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<h1>Greek Alphabet Flashcards</h1>
+
+		<div class="controls">
+			<button id="prev" class="button-secondary">Previous</button>
+			<button id="next" class="button-primary">Next</button>
+			<button id="randomize">Random</button>
+			<button id="reset">Reset</button>
+		</div>
+
+		<div class="flashcard-container">
+			<div class="flashcard">
+				<div class="card-face front">
+					<div class="greek-letter"></div>
+					<div class="letter-name"></div>
+					<div class="small-letter"></div>
+				</div>
+				<div class="card-face back">
+					<div class="letter-name"></div>
+					<div class="pronunciation"></div>
+					<div class="usage"></div>
+					<div class="example"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="progress-container">
+			<div class="progress-bar"></div>
+		</div>
+
+		<div class="card-counter">Card <span id="current-card">1</span> of <span id="total-cards">24</span></div>
+
+		<div class="alphabet-grid"></div>
+	</div>
+
+	<script>
+		// Greek alphabet data
+		const greekAlphabet = [
+			{
+				name: 'Alpha',
+				upperCase: 'Α',
+				lowerCase: 'α',
+				pronunciation: 'Al-fah',
+				usage: 'Angles in trigonometry',
+				example: 'α = 30°'
+			},
+			{
+				name: 'Beta',
+				upperCase: 'Β',
+				lowerCase: 'β',
+				pronunciation: 'Bay-tah',
+				usage: 'Beta particles, coefficients',
+				example: 'β-decay in physics'
+			},
+			{
+				name: 'Gamma',
+				upperCase: 'Γ',
+				lowerCase: 'γ',
+				pronunciation: 'Gam-ah',
+				usage: 'Gamma rays, Euler–Mascheroni constant',
+				example: 'γ-rays'
+			},
+			{
+				name: 'Delta',
+				upperCase: 'Δ',
+				lowerCase: 'δ',
+				pronunciation: 'Del-tah',
+				usage: 'Change in value (Δ), small variation (δ)',
+				example: 'Δx = x₂ - x₁'
+			},
+			{
+				name: 'Epsilon',
+				upperCase: 'Ε',
+				lowerCase: 'ε',
+				pronunciation: 'Ep-si-lon',
+				usage: 'Strain, small values in limits',
+				example: 'ε → 0 in calculus'
+			},
+			{
+				name: 'Zeta',
+				upperCase: 'Ζ',
+				lowerCase: 'ζ',
+				pronunciation: 'Zay-tah',
+				usage: 'Damping ratio',
+				example: 'ζ = 0.7 (critical damping)'
+			},
+			{
+				name: 'Eta',
+				upperCase: 'Η',
+				lowerCase: 'η',
+				pronunciation: 'Ay-tah',
+				usage: 'Efficiency',
+				example: 'η = 85%'
+			},
+			{
+				name: 'Theta',
+				upperCase: 'Θ',
+				lowerCase: 'θ',
+				pronunciation: 'Thay-tah',
+				usage: 'Angle in geometry',
+				example: 'θ = 45°'
+			},
+			{
+				name: 'Iota',
+				upperCase: 'Ι',
+				lowerCase: 'ι',
+				pronunciation: 'Eye-oh-tah',
+				usage: 'Represents something very small',
+				example: '"Not one iota of change"'
+			},
+			{
+				name: 'Kappa',
+				upperCase: 'Κ',
+				lowerCase: 'κ',
+				pronunciation: 'Kap-ah',
+				usage: 'Spring constant, curvature',
+				example: 'κ = 100 N/m'
+			},
+			{
+				name: 'Lambda',
+				upperCase: 'Λ',
+				lowerCase: 'λ',
+				pronunciation: 'Lam-dah',
+				usage: 'Wavelength, eigenvalues',
+				example: 'λ = 500 nm'
+			},
+			{
+				name: 'Mu',
+				upperCase: 'Μ',
+				lowerCase: 'μ',
+				pronunciation: 'Mew',
+				usage: 'Micro (μg), mean',
+				example: 'μ = 10, μg = microgram'
+			},
+			{
+				name: 'Nu',
+				upperCase: 'Ν',
+				lowerCase: 'ν',
+				pronunciation: 'New',
+				usage: 'Frequency',
+				example: 'ν = 60 Hz'
+			},
+			{
+				name: 'Xi',
+				upperCase: 'Ξ',
+				lowerCase: 'ξ',
+				pronunciation: 'Ksee',
+				usage: 'Random variables',
+				example: 'ξ = stochastic process'
+			},
+			{
+				name: 'Omicron',
+				upperCase: 'Ο',
+				lowerCase: 'ο',
+				pronunciation: 'Oh-mi-cron',
+				usage: 'Rare, sometimes in phonetics',
+				example: 'Rarely used in math'
+			},
+			{
+				name: 'Pi',
+				upperCase: 'Π',
+				lowerCase: 'π',
+				pronunciation: 'Pie',
+				usage: 'Circle ratio',
+				example: 'π ≈ 3.1416'
+			},
+			{
+				name: 'Rho',
+				upperCase: 'Ρ',
+				lowerCase: 'ρ',
+				pronunciation: 'Row',
+				usage: 'Density',
+				example: 'ρ = 1.225 kg/m³'
+			},
+			{
+				name: 'Sigma',
+				upperCase: 'Σ',
+				lowerCase: 'σ',
+				pronunciation: 'Sig-mah',
+				usage: 'Summation (Σ), Standard deviation (σ)',
+				example: 'Σx, σ = std. dev.'
+			},
+			{
+				name: 'Tau',
+				upperCase: 'Τ',
+				lowerCase: 'τ',
+				pronunciation: 'Taw',
+				usage: 'Torque, time constant',
+				example: 'τ = r × F'
+			},
+			{
+				name: 'Upsilon',
+				upperCase: 'Υ',
+				lowerCase: 'υ',
+				pronunciation: 'Oop-si-lon',
+				usage: 'High energy physics',
+				example: 'Υ particle (quarkonium)'
+			},
+			{
+				name: 'Phi',
+				upperCase: 'Φ',
+				lowerCase: 'φ',
+				pronunciation: 'Fee or Fie',
+				usage: 'Golden ratio, flux',
+				example: 'φ ≈ 1.618, Φ = magnetic flux'
+			},
+			{
+				name: 'Chi',
+				upperCase: 'Χ',
+				lowerCase: 'χ',
+				pronunciation: 'K-eye',
+				usage: 'Chi-squared in stats',
+				example: 'χ² = goodness of fit'
+			},
+			{
+				name: 'Psi',
+				upperCase: 'Ψ',
+				lowerCase: 'ψ',
+				pronunciation: 'Sigh',
+				usage: 'Wavefunction in quantum mechanics',
+				example: 'ψ(x) = probability amplitude'
+			},
+			{
+				name: 'Omega',
+				upperCase: 'Ω',
+				lowerCase: 'ω',
+				pronunciation: 'Oh-may-gah',
+				usage: 'Resistance (Ω), angular velocity (ω)',
+				example: 'Ω = 10 ohms, ω = 2πf'
+			}
+		];
+
+		// DOM elements
+		const flashcard = document.querySelector('.flashcard');
+		const frontLetter = document.querySelector('.front .greek-letter');
+		const frontName = document.querySelector('.front .letter-name');
+		const frontSmallLetter = document.querySelector('.front .small-letter');
+		const backName = document.querySelector('.back .letter-name');
+		const pronunciation = document.querySelector('.pronunciation');
+		const usage = document.querySelector('.usage');
+		const example = document.querySelector('.example');
+		const prevBtn = document.getElementById('prev');
+		const nextBtn = document.getElementById('next');
+		const randomizeBtn = document.getElementById('randomize');
+		const resetBtn = document.getElementById('reset');
+		const progressBar = document.querySelector('.progress-bar');
+		const currentCardSpan = document.getElementById('current-card');
+		const totalCardsSpan = document.getElementById('total-cards');
+		const alphabetGrid = document.querySelector('.alphabet-grid');
+
+		// State variables
+		let currentCardIndex = 0;
+		let isFlipped = false;
+		let seenCards = new Set();
+
+		// Initialize
+		totalCardsSpan.textContent = greekAlphabet.length;
+		updateCard();
+		createAlphabetGrid();
+
+		// Update card content
+		function updateCard() {
+			const letter = greekAlphabet[currentCardIndex];
+
+			// Update content
+			frontLetter.textContent = letter.upperCase;
+			frontName.textContent = letter.name;
+			frontSmallLetter.textContent = letter.lowerCase;
+			backName.textContent = letter.name;
+			pronunciation.textContent = letter.pronunciation;
+			usage.textContent = letter.usage;
+			example.textContent = letter.example;
+
+			// Update progress
+			currentCardSpan.textContent = currentCardIndex + 1;
+			progressBar.style.width = `${((currentCardIndex + 1) / greekAlphabet.length) * 100}%`;
+
+			// Mark as seen
+			seenCards.add(currentCardIndex);
+
+			// Update grid highlight
+			updateGridHighlight();
+
+			// Reset flip state
+			if (isFlipped) {
+				flashcard.classList.remove('flipped');
+				isFlipped = false;
+			}
+
+			// Animate the card
+			anime({
+				targets: '.flashcard',
+				scale: [0.9, 1],
+				opacity: [0.8, 1],
+				easing: 'easeOutElastic(1, .6)',
+				duration: 500
+			});
+		}
+
+		// Previous card
+		prevBtn.addEventListener('click', () => {
+			if (currentCardIndex > 0) {
+				currentCardIndex--;
+				updateCard();
+			}
+		});
+
+		// Next card
+		nextBtn.addEventListener('click', () => {
+			if (currentCardIndex < greekAlphabet.length - 1) {
+				currentCardIndex++;
+				updateCard();
+			}
+		});
+
+		// Randomize
+		randomizeBtn.addEventListener('click', () => {
+			// Find unviewed cards first
+			const unseenCards = [];
+			for (let i = 0; i < greekAlphabet.length; i++) {
+				if (!seenCards.has(i)) {
+					unseenCards.push(i);
+				}
+			}
+
+			// If all cards have been seen, select any random card
+			let newIndex;
+			if (unseenCards.length > 0) {
+				newIndex = unseenCards[Math.floor(Math.random() * unseenCards.length)];
+			} else {
+				do {
+					newIndex = Math.floor(Math.random() * greekAlphabet.length);
+				} while (newIndex === currentCardIndex && greekAlphabet.length > 1);
+			}
+
+			currentCardIndex = newIndex;
+			updateCard();
+
+			// Animate the randomize button
+			anime({
+				targets: '#randomize',
+				rotate: 360,
+				scale: [1, 1.2, 1],
+				duration: 700,
+				easing: 'easeInOutQuad'
+			});
+		});
+
+		// Reset progress
+		resetBtn.addEventListener('click', () => {
+			seenCards.clear();
+			currentCardIndex = 0;
+			updateCard();
+
+			// Animate reset
+			anime({
+				targets: '.progress-bar',
+				width: '0%',
+				duration: 500,
+				easing: 'easeInOutQuad'
+			});
+
+			anime({
+				targets: '#reset',
+				scale: [1, 1.2, 1],
+				backgroundColor: ['#ed8936', '#dd6b20', '#ed8936'],
+				duration: 700,
+				easing: 'easeInOutQuad'
+			});
+		});
+
+		// Flip card
+		flashcard.addEventListener('click', () => {
+			// Toggle the flipped class
+			flashcard.classList.toggle('flipped');
+			isFlipped = !isFlipped;
+
+			// Add animation effect to both faces for smoother transition
+			const frontTarget = '.card-face.front';
+			const backTarget = '.card-face.back';
+
+			anime({
+				targets: isFlipped ? frontTarget : backTarget,
+				scale: [0.9, 1],
+				duration: 300,
+				easing: 'easeOutQuad',
+				delay: 100
+			});
+		});
+
+		// Create alphabet grid
+		function createAlphabetGrid() {
+			greekAlphabet.forEach((letter, index) => {
+				const gridItem = document.createElement('div');
+				gridItem.className = 'grid-letter';
+				gridItem.textContent = letter.upperCase;
+				gridItem.setAttribute('data-index', index);
+
+				gridItem.addEventListener('click', () => {
+					currentCardIndex = index;
+					updateCard();
+
+					// Animate grid item click
+					anime({
+						targets: gridItem,
+						scale: [1, 1.2, 1],
+						backgroundColor: ['#cbd5e0', '#4299e1', '#cbd5e0'],
+						duration: 700,
+						easing: 'easeInOutQuad'
+					});
+				});
+
+				alphabetGrid.appendChild(gridItem);
+			});
+
+			updateGridHighlight();
+		}
+
+		// Update grid highlight
+		function updateGridHighlight() {
+			document.querySelectorAll('.grid-letter').forEach((item, index) => {
+				if (index === currentCardIndex) {
+					item.classList.add('active');
+				} else {
+					item.classList.remove('active');
+				}
+			});
+		}
+
+		// Keyboard navigation
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'ArrowLeft') {
+				if (currentCardIndex > 0) {
+					currentCardIndex--;
+					updateCard();
+				}
+			} else if (e.key === 'ArrowRight') {
+				if (currentCardIndex < greekAlphabet.length - 1) {
+					currentCardIndex++;
+					updateCard();
+				}
+			} else if (e.key === ' ' || e.key === 'Enter') {
+				flashcard.classList.toggle('flipped');
+				isFlipped = !isFlipped;
+			}
+		});
+
+		// Initial animation
+		anime({
+			targets: '.flashcard',
+			scale: [0.5, 1],
+			opacity: [0, 1],
+			easing: 'easeOutElastic(1, .6)',
+			duration: 800
+		});
+
+		anime({
+			targets: '.alphabet-grid .grid-letter',
+			translateY: [20, 0],
+			opacity: [0, 1],
+			delay: anime.stagger(30),
+			easing: 'easeOutQuad',
+			duration: 500
+		});
+	</script>
+</body>
+
+</html>
